@@ -1,0 +1,3138 @@
+<!DOCTYPE html>
+<html lang="hi">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Bijli App with Master Data
+  </title>
+  <link href="https://fonts.googleapis.com/css2?family=Segoe+UI&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      padding: 20px;
+      max-width: 1100px;
+      margin: auto;
+    }
+    h2, h3 {
+      color: #0a5a85;
+      text-align: center;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #0a5a85;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #084b70;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #fff;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #d0ecf3;
+    }
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .footer {
+      text-align: center;
+      font-size: 14px;
+      margin-top: 30px;
+      color: #666;
+    }
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .form-row input {
+      flex: 1;
+    }
+  
+
+  width: 100%;
+}
+  grid-column: 1 / -1;
+}
+
+body.dark {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+}
+body.dark input,
+body.dark select,
+body.dark textarea,
+body.dark button {
+  background-color: #2e2e2e;
+  color: #fff;
+  border-color: #555;
+}
+body.dark table {
+  background-color: #2b2b2b;
+  color: #e0e0e0;
+}
+body.dark th {
+  background-color: #444;
+}
+body.dark .footer {
+  color: #aaa;
+}
+
+.grid-form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.grid-form label {
+  font-weight: 600;
+}
+.grid-form input,
+.grid-form select,
+.grid-form textarea {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+  
+    /* Toast Message */
+    #toast {visibility: hidden; min-width: 220px; margin-left: -110px; background: #0a5a85; color: #fff; text-align: center; border-radius: 8px; padding: 10px; position: fixed; z-index: 9999; left: 50%; bottom: 30px; font-size: 14px;}
+    #toast.show {visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s;}
+    @keyframes fadein {from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;}}
+    @keyframes fadeout {from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;}}
+    
+</style>
+ </head>
+ <body>
+  <div id="billSection">
+   <h3>
+    📝 बिजली बिल एंट्री फॉर्म
+   </h3>
+   <form class="grid-form" id="billForm">
+    <!-- Sr No, K No Search -->
+    <div class="form-row" style="display: flex; gap: 10px;">
+     <input id="sr_search_lookup" placeholder="Sr No 🔍" style="flex:1;"/>
+     <input id="k_number_lookup" placeholder="K No 🔍" style="flex:1;"/>
+     <select id="sr_no" style="flex:1;">
+      <option value="">
+       चयन करें
+      </option>
+     </select>
+    </div>
+    <!-- K No, Jal Yojana, Meter Number -->
+    <div class="form-row">
+     <div style="flex: 1;">
+      <label>
+       के नम्बर
+      </label>
+      <input id="k_number" readonly=""/>
+     </div>
+     <div style="flex: 1;">
+      <label>
+       जल योजना
+      </label>
+      <input id="jal_yojana" readonly=""/>
+     </div>
+     <div style="flex: 1;">
+      <label>
+       मीटर नम्बर
+      </label>
+      <input id="meter_number" readonly=""/>
+     </div>
+    </div>
+    <!-- Month & Year -->
+    <div class="form-row">
+     <div style="flex: 1;">
+      <label>
+       माह
+      </label>
+      <select id="month">
+       <option value="">
+        Select Month
+       </option>
+       <option>
+        January
+       </option>
+       <option>
+        February
+       </option>
+       <option>
+        March
+       </option>
+       <option>
+        April
+       </option>
+       <option>
+        May
+       </option>
+       <option>
+        June
+       </option>
+       <option>
+        July
+       </option>
+       <option>
+        August
+       </option>
+       <option>
+        September
+       </option>
+       <option>
+        October
+       </option>
+       <option>
+        November
+       </option>
+       <option>
+        December
+       </option>
+      </select>
+     </div>
+     <div style="flex: 1;">
+      <label>
+       वर्ष
+      </label>
+      <select id="year">
+       <option value="">
+        Select Year
+       </option>
+       <option>
+        2025
+       </option>
+       <option>
+        2026
+       </option>
+       <option>
+        2027
+       </option>
+      </select>
+     </div>
+    </div>
+    <!-- Readings + Units Used -->
+    <div class="form-row">
+     <div style="flex: 1;">
+      <label>
+       वर्तमान पठन
+      </label>
+      <input id="current_reading" type="number"/>
+     </div>
+     <div style="flex: 1;">
+      <label>
+       गत पठन
+      </label>
+      <input id="prev_reading" type="number"/>
+     </div>
+     <div style="flex: 1;">
+      <label>
+       उपयोग (यूनिट)
+      </label>
+      <input id="units_used" type="number"/>
+     </div>
+    </div>
+    <!-- बिजली खर्च + स्थाई शुल्क -->
+    <div class="form-row">
+     <div style="flex: 1;">
+      <label>
+       बिजली खर्च
+      </label>
+      <input id="energy_charge" type="number"/>
+     </div>
+     <div style="flex: 1;">
+      <label>
+       स्थाई शुल्क
+      </label>
+      <input id="fixed_charge" type="number"/>
+     </div>
+     <div style="flex: 1;">
+      <label>
+       फ्यूल अधिभार
+      </label>
+      <input id="fuel_surcharge" type="number"/>
+     </div>
+     <div style="flex: 1;">
+      <label>
+       अतिरिक्त अन्य शुल्क
+      </label>
+      <input id="other_charge2" type="number"/>
+     </div>
+    </div>
+    <!-- पावर फैक्टर + अन्य शुल्क -->
+    <div class="form-row">
+     <div style="flex: 1;">
+      <label>
+       पावर फैक्टर
+      </label>
+      <input id="power_factor" type="number"/>
+     </div>
+     <div style="flex: 1;">
+      <label>
+       अन्य शुल्क
+      </label>
+      <input id="other_charges" type="number"/>
+     </div>
+    </div>
+    <!-- निगम राशि (readonly) -->
+    <label>
+     निगम राशि
+    </label>
+    <input id="nigam_rashi" readonly="" type="number"/>
+    <!-- विद्युत शुल्क + जल संरक्षण उपकर -->
+    <div class="form-row">
+     <div style="flex: 1;">
+      <label>
+       विद्युत शुल्क
+      </label>
+      <input id="duty" type="number"/>
+     </div>
+     <div style="flex: 1;">
+      <label>
+       जल संरक्षण उपकर
+      </label>
+      <input id="water_cess" type="number"/>
+     </div>
+    </div>
+    <!-- अन्य देय + अन्य -->
+    <div class="form-row">
+     <div style="flex: 1;">
+      <label>
+       अन्य देय
+      </label>
+      <input id="other_due" type="number"/>
+     </div>
+     <div style="flex: 1;">
+      <label>
+       अन्य
+      </label>
+      <input id="other_extra" type="number"/>
+     </div>
+    </div>
+    <!-- कुल भुगतान (readonly) -->
+    <label>
+     कुल भुगतान
+    </label>
+    <input id="total_amount" readonly=""/>
+    <!-- पिछला बकाया + टिप्पणी -->
+    <div class="form-row">
+     <div style="flex: 1;">
+      <label>
+       पिछला बकाया
+      </label>
+      <input id="previous_dues" type="number"/>
+     </div>
+     <div style="flex: 1;">
+      <label>
+       टिप्पणी
+      </label>
+      <input id="remarks" type="text"/>
+     </div>
+    </div>
+    <!-- Submit Button -->
+    <button onclick="submitForm()" type="button">
+     💾 सेव करें
+    </button>
+   </form>
+   <div class="btn-row">
+    <input id="tableSearch" placeholder="🔍 सर्च करें (क्रमांक, जल योजना, आदि)" style="flex:1; padding:8px; max-width:300px;" type="text"/>
+    <input id="kSearchInput" placeholder="🔍 K Number से खोजें" style="flex:1; padding:8px; max-width:300px;" type="text"/>
+    <button onclick="saveTableEdits()">
+     💾 परिवर्तन सहेजें
+    </button>
+    <button onclick="deleteSelectedRows()">
+     🗑️ चयनित पंक्तियाँ हटाएं
+    </button>
+<div class="btn-row">
+  <button onclick="exportTableToExcel()">📤 Excel में सेव करें</button>
+  <button onclick="exportTableToPDF()">🧾 PDF में सेव करें</button>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<script>
+
+function showToast(msg, success=true) {
+  const toast = document.getElementById("toast");
+  toast.innerText = msg;
+  toast.style.background = success ? "#0a5a85" : "#b91c1c";
+  toast.className = "show";
+  setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+}
+
+function exportTableToExcel() {
+  const wb = XLSX.utils.table_to_book(document.getElementById("dataTable"), { sheet: "Bills" });
+  XLSX.writeFile(wb, "Bijli_Bills.xlsx");
+}
+async function exportTableToPDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFont("helvetica");
+  doc.setFontSize(14);
+  doc.text("बिजली बिल रिपोर्ट", 14, 16);
+
+  const headers = [], data = [];
+  document.querySelectorAll("#dataTable thead th").forEach(th => headers.push(th.innerText));
+  document.querySelectorAll("#dataTable tbody tr").forEach(tr => {
+    const row = [];
+    tr.querySelectorAll("td").forEach(td => row.push(td.innerText));
+    data.push(row);
+  });
+
+  doc.autoTable({
+    head: [headers],
+    body: data,
+    startY: 22,
+    styles: { font: "helvetica", fontSize: 8 },
+  });
+  doc.save("Bijli_Bills.pdf");
+}
+</script>
+
+   </div>
+   <div style="max-height:400px; overflow:auto; border:1px solid #ccc; margin-top:10px;">
+    <table id="dataTable">
+     <thead>
+      <tr>
+       <th>
+        ✔️
+       </th>
+       <th>
+        क्रमांक
+       </th>
+       <th>
+        K No
+       </th>
+       <th>
+        जल योजना
+       </th>
+       <th>
+        मीटर
+       </th>
+       <th>
+        माह
+       </th>
+       <th>
+        वर्ष
+       </th>
+       <th>
+        वर्तमान
+       </th>
+       <th>
+        पूर्व
+       </th>
+       <th>
+        यूनिट
+       </th>
+       <th>
+        बिजली खर्च
+       </th>
+       <th>
+        स्थाई
+       </th>
+       <th>
+        PF
+       </th>
+       <th>
+        अन्य
+       </th>
+       <th>
+        निगम
+       </th>
+       <th>
+        शुल्क
+       </th>
+       <th>
+        जल उपकर
+       </th>
+       <th>
+        देय
+       </th>
+       <th>
+        अन्य
+       </th>
+       <th>
+        कुल
+       </th>
+       <th>
+        बकाया
+       </th>
+       <th>
+        टिप्पणी
+       </th>
+      </tr>
+     </thead>
+     <tbody>
+     </tbody>
+    </table>
+   </div>
+  </div>
+  <div id="masterSection" style="display:none;">
+   <h3>
+    📋 मास्टर डेटा जोड़ें
+   </h3>
+   <form id="masterForm">
+    <div class="form-row">
+     <input id="sr" placeholder="क्रमांक (Sr No)" required=""/>
+     <input id="k" placeholder="K Number" required=""/>
+     <input id="jal" placeholder="जल योजना" required=""/>
+     <input id="meter" placeholder="मीटर नंबर" required=""/>
+     <button type="submit">
+      ➕ जोड़ें / ✏️ अपडेट करें
+     </button>
+    </div>
+   </form>
+   <h4>
+    📄 Excel फ़ाइल से मास्टर डेटा जोड़ें
+   </h4>
+   <input accept=".xlsx,.xls" id="excelUpload" type="file"/>
+   <p style="font-size: 14px;">
+    Format: क्रमांक | K Number | जल योजना | मीटर नंबर (first 4 columns)
+   </p>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+   </script>
+   <script>
+    document.getElementById('excelUpload').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+        const masterData = JSON.parse(null || '[]');
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i];
+          if (row.length >= 4) {
+            const [sr, k, jal, meter] = row;
+            if (sr && k && jal && meter) {
+              masterData.push({ sr: sr.toString().trim(), k: k.toString().trim(), jal: jal.toString().trim(), meter: meter.toString().trim() });
+            }
+          }
+        }
+                loadMasterData();
+        showToast('📥 Excel से डेटा सफलतापूर्वक जोड़ा गया!');
+      };
+      reader.readAsArrayBuffer(file);
+    });
+   </script>
+   <h4>
+    📁 CSV फाइल से मास्टर डेटा जोड़ें
+   </h4>
+   <input accept=".csv" id="csvUpload" type="file"/>
+   <p style="font-size: 14px;">
+    Format: क्रमांक,K Number,जल योजना,मीटर नंबर
+   </p>
+   <script>
+    document.getElementById('csvUpload').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const lines = e.target.result.split('\n');
+        const data = JSON.parse(null || '[]');
+        for (let line of lines) {
+          const [sr, k, jal, meter] = line.split(',');
+          if (sr && k && jal && meter) {
+            data.push({ sr: sr.trim(), k: k.trim(), jal: jal.trim(), meter: meter.trim() });
+          }
+        }
+                loadMasterData();
+        showToast('📥 CSV से डेटा सफलतापूर्वक जोड़ा गया!');
+      };
+      reader.readAsText(file);
+    });
+   </script>
+   <table id="masterTable">
+    <thead>
+     <tr>
+      <th>
+       क्रमांक
+      </th>
+      <th>
+       K Number
+      </th>
+      <th>
+       जल योजना
+      </th>
+      <th>
+       मीटर नंबर
+      </th>
+      <th>
+       एक्शन
+      </th>
+     </tr>
+    </thead>
+    <tbody>
+    </tbody>
+   </table>
+  </div>
+  <div style="display:flex;justify-content:center;gap:10px;margin-top:20px;flex-wrap:wrap;">
+   <button onclick="toggleSection('billSection')" style="margin:10px;">
+    📝 बिल फॉर्म
+   </button>
+   <button onclick="toggleSection('masterSection')" style="margin:10px;">
+    📋 मास्टर डेटा
+   </button>
+   <button id="modeToggle" onclick="toggleMode()" type="button">
+    🌓 मोड
+   </button>
+  </div>
+  <div class="footer">
+   Powered by
+   <strong>
+    B.S. Tanwar
+   </strong>
+  </div>
+  <script>
+   const masterForm = document.getElementById('masterForm');
+    const srDropdown = document.getElementById('sr_no');
+    const masterTable = document.getElementById('masterTable').getElementsByTagName('tbody')[0];
+
+    let editingIndex = -1;
+
+    
+    function editMaster(index) {
+      const data = JSON.parse(null || '[]');
+      const d = data[index];
+      document.getElementById('sr').value = d.sr;
+      document.getElementById('k').value = d.k;
+      document.getElementById('jal').value = d.jal;
+      document.getElementById('meter').value = d.meter;
+      editingIndex = index;
+    }
+
+    function deleteMaster(index) {
+      const data = JSON.parse(null || '[]');
+      data.splice(index, 1);
+            loadMasterData();
+    }
+
+    masterForm.onsubmit = function(e) {
+      e.preventDefault();
+      const data = JSON.parse(null || '[]');
+      const item = {
+        sr: document.getElementById('sr').value,
+        k: document.getElementById('k').value,
+        jal: document.getElementById('jal').value,
+        meter: document.getElementById('meter').value
+      };
+      if (editingIndex >= 0) {
+        data[editingIndex] = item;
+        editingIndex = -1;
+      } else {
+        data.push(item);
+      }
+            masterForm.reset();
+      loadMasterData();
+    }
+
+    srDropdown.addEventListener('change', function () {
+      const data = JSON.parse(null || '[]');
+      const selected = data.find(d => d.sr === this.value);
+      if (selected) {
+        document.getElementById('k_number').value = selected.k;
+        document.getElementById('jal_yojana').value = selected.jal;
+        document.getElementById('meter_number').value = selected.meter;
+      }
+    });
+
+    function calc(id) {
+      return parseFloat(document.getElementById(id).value) || 0;
+    }
+
+    document.getElementById('current_reading').addEventListener('input', calcUnits);
+    document.getElementById('prev_reading').addEventListener('input', calcUnits);
+
+    function calcUnits() {
+      const used = calc('current_reading') - calc('prev_reading');
+      document.getElementById('units_used').value = used >= 0 ? used : 0;
+    }
+
+    ['energy_charge', 'fixed_charge', 'fuel_surcharge', 'power_factor', 'other_charges', 'other_charge2',
+     'duty', 'water_cess', 'other_due', 'other_extra'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calcTotal);
+    });
+
+    function calcTotal() {
+      const nigam = calc('energy_charge') + calc('fixed_charge') + calc('fuel_surcharge') + calc('power_factor') + calc('other_charges');
+      document.getElementById('nigam_rashi').value = nigam.toFixed(2);
+      const total = nigam + calc('duty') + calc('water_cess') + calc('other_due') + calc('other_extra') + calc('other_charge2');
+      document.getElementById('total_amount').value = total.toFixed(2);
+    }
+
+    
+    window.onload = loadMasterData;
+  </script>
+  <script>
+   function toggleSection(id) {
+  const sec = document.getElementById(id);
+  sec.style.display = sec.style.display === "none" ? "block" : "none";
+}
+
+// Add checkbox to each new row
+function addEditableRow(values) {
+  const tr = document.createElement('tr');
+  const checkbox = document.createElement('td');
+  const cb = document.createElement('input');
+  cb.type = 'checkbox';
+  checkbox.appendChild(cb);
+  tr.appendChild(checkbox);
+
+  values.forEach(text => {
+    const td = document.createElement('td');
+    td.contentEditable = true;
+    td.textContent = text;
+    tr.appendChild(td);
+  });
+  document.querySelector('#dataTable tbody').appendChild(tr);
+}
+
+
+function saveTableEdits() {
+  const rows = document.querySelectorAll('#dataTable tbody tr');
+  const saved = [];
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    const rowData = [];
+    for (let i = 1; i < cells.length; i++) {
+      rowData.push(cells[i].textContent.trim());
+    }
+    saved.push(rowData);
+  });
+  localStorage.setItem('savedTableRows', JSON.stringify(saved));
+  showToast('✅ परिवर्तन सहेज लिए गए!');
+}
+
+
+
+function deleteSelectedRows() {
+  const rows = document.querySelectorAll('#dataTable tbody tr');
+  rows.forEach(row => {
+    const checkbox = row.querySelector('input[type="checkbox"]');
+    if (checkbox && checkbox.checked) {
+      row.remove();
+    }
+  });
+}
+
+document.getElementById('tableSearch').addEventListener('input', function () {
+  const query = this.value.toLowerCase();
+  const rows = document.querySelectorAll('#dataTable tbody tr');
+  rows.forEach(row => {
+    row.style.display = Array.from(row.cells).some(td => td.textContent.toLowerCase().includes(query)) ? '' : 'none';
+  });
+});
+
+
+
+function toggleMode() {
+  document.body.classList.toggle('dark');
+  localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+document.addEventListener('DOMContentLoaded', () => {
+  if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark');
+  }
+});
+
+function calculateUnits() {
+  const current = parseFloat(document.getElementById("current_reading").value) || 0;
+  const previous = parseFloat(document.getElementById("prev_reading").value) || 0;
+  const used = current - previous;
+  const units = used >= 0 ? used : 0;
+  document.getElementById("units_used").value = units;
+  autoCalculateCharges();
+}
+
+document.getElementById("current_reading").addEventListener("input", calculateUnits);
+document.getElementById("prev_reading").addEventListener("input", calculateUnits);
+
+function autoCalculateCharges() {
+  const units = parseFloat(document.getElementById('units_used').value) || 0;
+
+  const dutyInput = document.getElementById('duty');
+  if (!dutyInput.dataset.manual) {
+    dutyInput.value = (units * 0.4).toFixed(2);
+  }
+
+  const waterInput = document.getElementById('water_cess');
+  if (!waterInput.dataset.manual) {
+    waterInput.value = (units * 0.1).toFixed(2);
+  }
+
+  calculateTotal();
+}
+
+['duty', 'water_cess'].forEach(id => {
+  const input = document.getElementById(id);
+  input.addEventListener('input', function () {
+    this.dataset.manual = 'true';
+  });
+});
+
+document.getElementById('units_used').addEventListener('input', autoCalculateCharges);
+
+document.getElementById('tableSearch').addEventListener('input', runSearch);
+document.getElementById('kSearchInput').addEventListener('input', runSearch);
+
+function runSearch() {
+  const srQuery = document.getElementById('tableSearch').value.toLowerCase();
+  const kQuery = document.getElementById('kSearchInput').value.toLowerCase();
+  const rows = document.querySelectorAll('#dataTable tbody tr');
+
+  rows.forEach(row => {
+    const srCell = row.cells[1]?.textContent.toLowerCase() || "";
+    const kCell = row.cells[2]?.textContent.toLowerCase() || "";
+    const matchesSr = srCell.includes(srQuery);
+    const matchesK = kCell.includes(kQuery);
+    row.style.display = matchesSr && matchesK ? '' : 'none';
+  });
+}
+
+document.getElementById('k_number_lookup').addEventListener('input', function () {
+  const val = this.value.trim().toLowerCase();
+  const masterData = JSON.parse(null || '[]');
+  const found = masterData.find(item => (item.k || '').toLowerCase() === val);
+  if (found) {
+    document.getElementById('sr_no').value = found.sr;
+    document.getElementById('k_number').value = found.k;
+    document.getElementById('jal_yojana').value = found.jal;
+    document.getElementById('meter_number').value = found.meter;
+  }
+});
+
+// Save form data to localStorage on submit
+function saveFormToLocal() {
+  const form = document.getElementById('billForm');
+  const inputs = form.querySelectorAll('input, select, textarea');
+  const formData = {};
+  inputs.forEach(input => {
+    if (input.id) formData[input.id] = input.value;
+  });
+  localStorage.setItem('savedFormData', JSON.stringify(formData));
+}
+
+// Restore form data from localStorage
+function loadFormFromLocal() {
+  const saved = JSON.parse(localStorage.getItem('savedFormData') || '{}');
+  Object.entries(saved).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val;
+  });
+}
+
+document.addEventListener('DOMContentLoaded', loadFormFromLocal);
+document.getElementById('billForm').addEventListener('submit', saveFormToLocal);
+document.querySelector('button[onclick="submitForm()"]')
+  .addEventListener('click', saveFormToLocal);
+
+// Enable manual override of units_used
+document.getElementById('units_used').addEventListener('input', function () {
+  this.dataset.manual = 'true';
+});
+
+// Save data table entries to localStorage
+
+// Load table from localStorage
+
+// Auto-save table after submit
+
+// Save month and year separately
+['month', 'year'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('change', () => {
+    localStorage.setItem('last_' + id, el.value);
+  });
+});
+
+// Load month and year on startup
+function restoreMonthYear() {
+  ['month', 'year'].forEach(id => {
+    const saved = localStorage.getItem('last_' + id);
+    if (saved) document.getElementById(id).value = saved;
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadFormFromLocal();
+  loadTableFromLocal();
+  restoreMonthYear();
+});
+  </script>
+  <script>
+   document.getElementById('sr_search_lookup').addEventListener('input', function () {
+  const filter = this.value.toLowerCase();
+  const dropdown = document.getElementById('sr_no');
+  const options = dropdown.options;
+
+  for (let i = 0; i < options.length; i++) {
+    const txt = options[i].textContent.toLowerCase();
+    options[i].style.display = txt.includes(filter) ? '' : 'none';
+  }
+});
+  </script>
+  <script>
+   // 🧠 Autofill previous reading and fixed charge for selected K Number
+function fillPreviousReadingAndCharges(kNumber) {
+  const data = JSON.parse(localStorage.getItem('savedTableRows') || '[]');
+  const filtered = data.filter(row => row[1]?.trim() === kNumber.trim());
+
+  if (filtered.length === 0) return;
+
+  const monthOrder = {
+    January: 1, February: 2, March: 3, April: 4, May: 5, June: 6,
+    July: 7, August: 8, September: 9, October: 10, November: 11, December: 12
+  };
+  filtered.sort((a, b) => {
+    const y1 = parseInt(b[5]), y2 = parseInt(a[5]);
+    const m1 = monthOrder[b[4]], m2 = monthOrder[a[4]];
+    return y1 - y2 || m1 - m2;
+  });
+
+  const latest = filtered[0];
+  if (latest) {
+    document.getElementById('prev_reading').value = latest[6];   // current_reading -> prev
+    document.getElementById('fixed_charge').value = latest[10];  // ✅ fixed charge corrected
+  }
+}
+
+// Update srDropdown event
+document.addEventListener("DOMContentLoaded", () => {
+  const srDropdown = document.getElementById('sr_no');
+  srDropdown.addEventListener('change', function () {
+    const data = JSON.parse(null || '[]');
+    const selected = data.find(d => d.sr === this.value);
+    if (selected) {
+      document.getElementById('k_number').value = selected.k;
+      document.getElementById('jal_yojana').value = selected.jal;
+      document.getElementById('meter_number').value = selected.meter;
+
+      // Autofill values
+      fillPreviousReadingAndCharges(selected.k);
+    }
+  });
+});
+  </script>
+ <div id="toast"></div>
+
+<script>
+  // 🔹 Embedded Master Data (349 records)
+  const embeddedMasterData = [
+  {
+    "sr": "1",
+    "k": "310531001137",
+    "jal": "SALUNDIA NOKHA",
+    "meter": "1314485"
+  },
+  {
+    "sr": "2",
+    "k": "310531001158",
+    "jal": "T W  NO-1 SALUMDIYA",
+    "meter": "740748"
+  },
+  {
+    "sr": "3",
+    "k": "310531001187",
+    "jal": "NOKHA MAGARAWALI DHANI",
+    "meter": "9119512"
+  },
+  {
+    "sr": "4",
+    "k": "310531001246",
+    "jal": "MEHLAI BAADI SALUNDI",
+    "meter": "6684775"
+  },
+  {
+    "sr": "5",
+    "k": "310531001582",
+    "jal": "GHATTU NOKHA",
+    "meter": "32140A"
+  },
+  {
+    "sr": "6",
+    "k": "310531001583",
+    "jal": "WATER WORKS GHATU",
+    "meter": "6684673"
+  },
+  {
+    "sr": "7",
+    "k": "310531001181",
+    "jal": "T W NO-2  SALUNDIYA",
+    "meter": "461935"
+  },
+  {
+    "sr": "8",
+    "k": "310531001640",
+    "jal": "GHATTU",
+    "meter": "6684671"
+  },
+  {
+    "sr": "9",
+    "k": "310531001904",
+    "jal": "MADIYA",
+    "meter": "6684748"
+  },
+  {
+    "sr": "10",
+    "k": "310531002313",
+    "jal": "SOMALSAR",
+    "meter": "7847473"
+  },
+  {
+    "sr": "11",
+    "k": "310531002388",
+    "jal": "SOMALSAR",
+    "meter": "6684790"
+  },
+  {
+    "sr": "12",
+    "k": "310531002389",
+    "jal": "SOMALSAR",
+    "meter": "7847022"
+  },
+  {
+    "sr": "13",
+    "k": "310531002398",
+    "jal": "SOMALSAR",
+    "meter": "7847473"
+  },
+  {
+    "sr": "14",
+    "k": "310531002420",
+    "jal": "RAMDEV KI DHANI SOMALSAR",
+    "meter": "3162960"
+  },
+  {
+    "sr": "15",
+    "k": "310531002655",
+    "jal": "BISHNOI DHANI RAISAR",
+    "meter": "1314295"
+  },
+  {
+    "sr": "16",
+    "k": "310531002816",
+    "jal": "BIRAMSAR",
+    "meter": "1314299"
+  },
+  {
+    "sr": "17",
+    "k": "310531002842",
+    "jal": "SIYAGO KI DHANI BIRAMSAR",
+    "meter": "A32529"
+  },
+  {
+    "sr": "18",
+    "k": "310531002843",
+    "jal": "BINADI BIRAMSAR",
+    "meter": "2387017"
+  },
+  {
+    "sr": "19",
+    "k": "310531002847",
+    "jal": "GORCHIO KI DHANI BIRAMSAR",
+    "meter": "1313991"
+  },
+  {
+    "sr": "20",
+    "k": "310531002848",
+    "jal": "MEGH DHANI BIRAMSAR",
+    "meter": "471014"
+  },
+  {
+    "sr": "21",
+    "k": "310531003027",
+    "jal": "RAISAR",
+    "meter": "713816"
+  },
+  {
+    "sr": "22",
+    "k": "310531002615",
+    "jal": "RAISAR",
+    "meter": "7847380"
+  },
+  {
+    "sr": "23",
+    "k": "310531001304",
+    "jal": "DEHRU KI DHANI SALUNDIYA",
+    "meter": "9119202"
+  },
+  {
+    "sr": "24",
+    "k": "310531002937",
+    "jal": "PRIMARY SCHOLL BIRAMSAR",
+    "meter": "1314330"
+  },
+  {
+    "sr": "25",
+    "k": "310531002774",
+    "jal": "KUNTAL RAISAR",
+    "meter": "470540"
+  },
+  {
+    "sr": "26",
+    "k": "310531003164",
+    "jal": "DASHNU",
+    "meter": "6689503"
+  },
+  {
+    "sr": "27",
+    "k": "310531002578",
+    "jal": "MEGH DHANI PURV SOMALSAR",
+    "meter": "7847471"
+  },
+  {
+    "sr": "28",
+    "k": "310531002787",
+    "jal": "RAISAR",
+    "meter": "8689766"
+  },
+  {
+    "sr": "29",
+    "k": "310531002788",
+    "jal": "RAMNADIYA DHANIYA RAISAR",
+    "meter": "1314330"
+  },
+  {
+    "sr": "30",
+    "k": "310531002789",
+    "jal": "SOUTH WEST MALAM SINGH DHANI",
+    "meter": "6689504"
+  },
+  {
+    "sr": "31",
+    "k": "310531002790",
+    "jal": "NAYAKO   MEGHWALO KI SOUTH DH",
+    "meter": "6689770"
+  },
+  {
+    "sr": "32",
+    "k": "310531003165",
+    "jal": "MEGHWALO KI DHANI DASNOO",
+    "meter": "5381233"
+  },
+  {
+    "sr": "34",
+    "k": "310532000292",
+    "jal": "HIMTSAR",
+    "meter": "RJV05117"
+  },
+  {
+    "sr": "35",
+    "k": "310532000291",
+    "jal": "SURPURA",
+    "meter": "1315718"
+  },
+  {
+    "sr": "36",
+    "k": "310532000293",
+    "jal": "HIMTSAR SAMRATHAL DHORA",
+    "meter": "3038323"
+  },
+  {
+    "sr": "38",
+    "k": "310532000457",
+    "jal": "DHUPALIYA BUS STEND TW",
+    "meter": "1314585"
+  },
+  {
+    "sr": "39",
+    "k": "310532000622",
+    "jal": "ANKHISAR",
+    "meter": "1350935"
+  },
+  {
+    "sr": "40",
+    "k": "310532000623",
+    "jal": "ANKHISAR",
+    "meter": "4421"
+  },
+  {
+    "sr": "41",
+    "k": "310532000676",
+    "jal": "ANKHISAR NIMOLAI NADI",
+    "meter": "1315495"
+  },
+  {
+    "sr": "42",
+    "k": "310532000678",
+    "jal": "ANKHISAR TW 3",
+    "meter": "1315496"
+  },
+  {
+    "sr": "43",
+    "k": "310532001136",
+    "jal": "MAIYASAR",
+    "meter": "9436650"
+  },
+  {
+    "sr": "44",
+    "k": "310532001145",
+    "jal": "MAIYASAR DHAMDHANI",
+    "meter": "1315500"
+  },
+  {
+    "sr": "45",
+    "k": "310532001146",
+    "jal": "MAIYASAR NAHAR NADI",
+    "meter": "9212303"
+  },
+  {
+    "sr": "46",
+    "k": "310532001147",
+    "jal": "MAIYASAR KARMIYA NADI",
+    "meter": "9212684"
+  },
+  {
+    "sr": "47",
+    "k": "310532001148",
+    "jal": "MAIYASAR MEGHWALO KI DHANI",
+    "meter": "3898811"
+  },
+  {
+    "sr": "48",
+    "k": "310532001518",
+    "jal": "SURPURA TW 2",
+    "meter": "1352206"
+  },
+  {
+    "sr": "49",
+    "k": "310532001543",
+    "jal": "SURPURA",
+    "meter": "1315717"
+  },
+  {
+    "sr": "50",
+    "k": "310532002227",
+    "jal": "SURPURA",
+    "meter": "1352202"
+  },
+  {
+    "sr": "51",
+    "k": "310532001351",
+    "jal": "KHICHIYASAR",
+    "meter": "9206959"
+  },
+  {
+    "sr": "52",
+    "k": "310532001360",
+    "jal": "KHICHIYASAR GODARO KI DHANI",
+    "meter": "1315494"
+  },
+  {
+    "sr": "53",
+    "k": "310532001242",
+    "jal": "DHUPALIYA SCHOOL KE PICHE TW 2",
+    "meter": "471562"
+  },
+  {
+    "sr": "54",
+    "k": "310532007991",
+    "jal": "HIMTSAR POST OFFICE",
+    "meter": "14404311"
+  },
+  {
+    "sr": "55",
+    "k": "310532008187",
+    "jal": "HIMTSAR KASIRAM LEKHRAM HOUSE",
+    "meter": "1350980"
+  },
+  {
+    "sr": "56",
+    "k": "310532008189",
+    "jal": "HIMTSAR KHARJANIYA NADI",
+    "meter": "999999999"
+  },
+  {
+    "sr": "57",
+    "k": "310532008201",
+    "jal": "HIMTSAR JHILAYI NADI",
+    "meter": "14246533"
+  },
+  {
+    "sr": "58",
+    "k": "310532008221",
+    "jal": "MUKAM",
+    "meter": "1350931"
+  },
+  {
+    "sr": "59",
+    "k": "310532008720",
+    "jal": "HIMTSAR",
+    "meter": "99999999"
+  },
+  {
+    "sr": "60",
+    "k": "310532008864",
+    "jal": "HIMTSAR",
+    "meter": "9212713"
+  },
+  {
+    "sr": "61",
+    "k": "310532013494",
+    "jal": "SINJGURU",
+    "meter": "471184"
+  },
+  {
+    "sr": "62",
+    "k": "310532013538",
+    "jal": "SINJGURU",
+    "meter": "26998"
+  },
+  {
+    "sr": "63",
+    "k": "310532013624",
+    "jal": "SINJGURU",
+    "meter": "3163018"
+  },
+  {
+    "sr": "64",
+    "k": "310532009105",
+    "jal": "MUKAM GOSALA",
+    "meter": "20251512"
+  },
+  {
+    "sr": "65",
+    "k": "310532009106",
+    "jal": "MUKAM SAMRATHAL DHORA",
+    "meter": "9212424"
+  },
+  {
+    "sr": "66",
+    "k": "310532009148",
+    "jal": "MUKAM POWER HOUSE",
+    "meter": "3162902"
+  },
+  {
+    "sr": "67",
+    "k": "310532009223",
+    "jal": "MUKAM SAMRATHAL DHORA ORAN TW PIPASAR ROAD",
+    "meter": "1352353"
+  },
+  {
+    "sr": "68",
+    "k": "310532009252",
+    "jal": "MUKAM SAMRATHAL DHORA TW 6",
+    "meter": "47561"
+  },
+  {
+    "sr": "69",
+    "k": "310532009274",
+    "jal": "MUKAM POWER HOUSE ROAD",
+    "meter": "19591620AA"
+  },
+  {
+    "sr": "70",
+    "k": "310532001827",
+    "jal": "SURPURA SINJGURU ROAD",
+    "meter": "1315756"
+  },
+  {
+    "sr": "71",
+    "k": "310532012221",
+    "jal": "KAKRA HANUMAN SAGAR",
+    "meter": "1352713"
+  },
+  {
+    "sr": "72",
+    "k": "310532012246",
+    "jal": "KAKRA BALIKA SCHOOL",
+    "meter": "13444646"
+  },
+  {
+    "sr": "73",
+    "k": "310532013114",
+    "jal": "KAKRA",
+    "meter": "1315536"
+  },
+  {
+    "sr": "74",
+    "k": "310532013115",
+    "jal": "KAKRA TW 2",
+    "meter": "1350936"
+  },
+  {
+    "sr": "75",
+    "k": "310532013116",
+    "jal": "KAKRA TW NO 3",
+    "meter": "9212712"
+  },
+  {
+    "sr": "76",
+    "k": "310532012826",
+    "jal": "KAKRA",
+    "meter": "9212710"
+  },
+  {
+    "sr": "79",
+    "k": "310532009355",
+    "jal": "MUKAM PODHORA DHANI",
+    "meter": "1350934"
+  },
+  {
+    "sr": "80",
+    "k": "310532011281",
+    "jal": "BERASAR",
+    "meter": "20250527"
+  },
+  {
+    "sr": "81",
+    "k": "310532011953",
+    "jal": "BERASAR BAGTAWAR PURA JASNATH BADI",
+    "meter": "3164121"
+  },
+  {
+    "sr": "82",
+    "k": "310532011838",
+    "jal": "BERASAR TW 4",
+    "meter": "999999999"
+  },
+  {
+    "sr": "83",
+    "k": "310532011778",
+    "jal": "BERASAR",
+    "meter": "5326434"
+  },
+  {
+    "sr": "85",
+    "k": "310532011508",
+    "jal": "BERASAR GAON",
+    "meter": "1314587"
+  },
+  {
+    "sr": "86",
+    "k": "310532011386",
+    "jal": "BERASAR",
+    "meter": "677455"
+  },
+  {
+    "sr": "87",
+    "k": "310532014638",
+    "jal": "SOWA GAON",
+    "meter": "26183"
+  },
+  {
+    "sr": "88",
+    "k": "310532014683",
+    "jal": "SOWA",
+    "meter": "471006"
+  },
+  {
+    "sr": "89",
+    "k": "310532014850",
+    "jal": "SOWA NEAR SAMUDAYAIK BHAWAN",
+    "meter": "1314047"
+  },
+  {
+    "sr": "90",
+    "k": "310532015076",
+    "jal": "SOWA",
+    "meter": "6688425"
+  },
+  {
+    "sr": "91",
+    "k": "310532015255",
+    "jal": "GAJRUPDESAR",
+    "meter": "20253811"
+  },
+  {
+    "sr": "92",
+    "k": "310532015271",
+    "jal": "GAJRUPDESAR",
+    "meter": "6684756"
+  },
+  {
+    "sr": "93",
+    "k": "310532006692",
+    "jal": "MORKHANA JETHMAL SEWAG GHAR KE PAS",
+    "meter": "9210941"
+  },
+  {
+    "sr": "94",
+    "k": "310532006705",
+    "jal": "MORKHANA BHERO SINGH PANE SINGHH GHAR KE PAS",
+    "meter": "9207181"
+  },
+  {
+    "sr": "95",
+    "k": "310532006967",
+    "jal": "MORKHANA RAJIV GHANDI SEVA KENDRA",
+    "meter": "6684366"
+  },
+  {
+    "sr": "96",
+    "k": "310532007114",
+    "jal": "BANIYA",
+    "meter": "9210944"
+  },
+  {
+    "sr": "97",
+    "k": "310532007190",
+    "jal": "BANIYA",
+    "meter": "472273"
+  },
+  {
+    "sr": "98",
+    "k": "310532007317",
+    "jal": "BANIYA",
+    "meter": "3164123"
+  },
+  {
+    "sr": "99",
+    "k": "310532007116",
+    "jal": "BANIYA",
+    "meter": "1315743"
+  },
+  {
+    "sr": "100",
+    "k": "310532014262",
+    "jal": "SINDHU",
+    "meter": "26844A"
+  },
+  {
+    "sr": "101",
+    "k": "310532014264",
+    "jal": "SINDHU",
+    "meter": "1315749"
+  },
+  {
+    "sr": "102",
+    "k": "310532011299",
+    "jal": "BERASAR",
+    "meter": "1314586"
+  },
+  {
+    "sr": "103",
+    "k": "310532011760",
+    "jal": "BERASAR TW N 2",
+    "meter": "20250524"
+  },
+  {
+    "sr": "104",
+    "k": "310532006982",
+    "jal": "MORKHANA MANGLA TALAB",
+    "meter": "3163195"
+  },
+  {
+    "sr": "105",
+    "k": "310532006983",
+    "jal": "DABLA TALAB MANAKSAR",
+    "meter": "9210942"
+  },
+  {
+    "sr": "106",
+    "k": "310532015196",
+    "jal": "KIRTASAR FATA DHANI",
+    "meter": "3163194"
+  },
+  {
+    "sr": "107",
+    "k": "310532009354",
+    "jal": "MUKAM TALVA MEGHWALO KI DHANI",
+    "meter": "3163255"
+  },
+  {
+    "sr": "108",
+    "k": "310532014920",
+    "jal": "SOWA SC ST MOHLA",
+    "meter": "6688424"
+  },
+  {
+    "sr": "109",
+    "k": "310533000422",
+    "jal": "JASRASAR PUMP HOUSE",
+    "meter": "3038744"
+  },
+  {
+    "sr": "110",
+    "k": "310533000423",
+    "jal": "BUS STEND JASRASAR",
+    "meter": "3029967"
+  },
+  {
+    "sr": "111",
+    "k": "310533000427",
+    "jal": "JASRASAR",
+    "meter": "284193"
+  },
+  {
+    "sr": "112",
+    "k": "310533000424",
+    "jal": "TW 3 JASRASAR",
+    "meter": "30299650"
+  },
+  {
+    "sr": "113",
+    "k": "310533000425",
+    "jal": "JASRASAR",
+    "meter": "5117157"
+  },
+  {
+    "sr": "114",
+    "k": "310533001539",
+    "jal": "JASRASAR",
+    "meter": "470970"
+  },
+  {
+    "sr": "115",
+    "k": "310533001666",
+    "jal": "JASRASAR",
+    "meter": "9872961"
+  },
+  {
+    "sr": "116",
+    "k": "310533002835",
+    "jal": "JASRASAR BIRMERI BAS",
+    "meter": "3162649"
+  },
+  {
+    "sr": "117",
+    "k": "310533003322",
+    "jal": "GANGASAGAR JASRASAR",
+    "meter": "2397052"
+  },
+  {
+    "sr": "118",
+    "k": "310533003323",
+    "jal": "BHAGWATI KUND JASRASAR",
+    "meter": "nan"
+  },
+  {
+    "sr": "119",
+    "k": "310533003324",
+    "jal": "DHORA KAKAR JASRASAR",
+    "meter": "2396608"
+  },
+  {
+    "sr": "120",
+    "k": "310533003325",
+    "jal": "JASNATH MANDIR",
+    "meter": "1314104"
+  },
+  {
+    "sr": "121",
+    "k": "310533003747",
+    "jal": "SAJANWASHI",
+    "meter": "4421"
+  },
+  {
+    "sr": "122",
+    "k": "310533003748",
+    "jal": "ANNASAR SAJANWASI",
+    "meter": "2177"
+  },
+  {
+    "sr": "123",
+    "k": "310533003856",
+    "jal": "MEGHWAL BAS SAJANWASHI",
+    "meter": "15208571"
+  },
+  {
+    "sr": "124",
+    "k": "310533003860",
+    "jal": "SAJANWASHI",
+    "meter": "19975672"
+  },
+  {
+    "sr": "125",
+    "k": "310533004992",
+    "jal": "GAJSUKHDESAR",
+    "meter": "3163391"
+  },
+  {
+    "sr": "126",
+    "k": "310533005041",
+    "jal": "GAJSUKHDESAR",
+    "meter": "3316208"
+  },
+  {
+    "sr": "127",
+    "k": "310533005042",
+    "jal": "GAJSUKHDESAR",
+    "meter": "1314102"
+  },
+  {
+    "sr": "128",
+    "k": "310533005081",
+    "jal": "UDSAR",
+    "meter": "3163787"
+  },
+  {
+    "sr": "129",
+    "k": "310533005196",
+    "jal": "GAJSUKHDESAR",
+    "meter": "3163390"
+  },
+  {
+    "sr": "130",
+    "k": "310533005212",
+    "jal": "GAJRUPDESAR",
+    "meter": "6688842"
+  },
+  {
+    "sr": "131",
+    "k": "310533005242",
+    "jal": "CHILANADI GAJSUKHDESAR ORAN VALI TW 1st",
+    "meter": "7840886"
+  },
+  {
+    "sr": "132",
+    "k": "310533005243",
+    "jal": "GAJSUKHDESAR",
+    "meter": "6688843"
+  },
+  {
+    "sr": "134",
+    "k": "310533003984",
+    "jal": "KURJADI",
+    "meter": "9204863"
+  },
+  {
+    "sr": "135",
+    "k": "310533004316",
+    "jal": "UDSAR",
+    "meter": "2397107"
+  },
+  {
+    "sr": "136",
+    "k": "310533004317",
+    "jal": "UDSAR",
+    "meter": "8347283"
+  },
+  {
+    "sr": "137",
+    "k": "310533005497",
+    "jal": "THAWARIYA",
+    "meter": "9211298"
+  },
+  {
+    "sr": "138",
+    "k": "310533005502",
+    "jal": "THAWARIYA",
+    "meter": "13445082"
+  },
+  {
+    "sr": "139",
+    "k": "310533005557",
+    "jal": "THAWARIYA",
+    "meter": "472040"
+  },
+  {
+    "sr": "140",
+    "k": "310533005721",
+    "jal": "MEGHWALO KI DHANI JAISALSAR ROAD RAMDEVJI MANDIR PICHE",
+    "meter": "13505858"
+  },
+  {
+    "sr": "141",
+    "k": "310533005726",
+    "jal": "THAWARIYA",
+    "meter": "3940153"
+  },
+  {
+    "sr": "142",
+    "k": "310533006828",
+    "jal": "JHARELI",
+    "meter": "2397022"
+  },
+  {
+    "sr": "143",
+    "k": "310533006829",
+    "jal": "TW JHARELI",
+    "meter": "9211201"
+  },
+  {
+    "sr": "144",
+    "k": "310533006830",
+    "jal": "JHARELI",
+    "meter": "9212701"
+  },
+  {
+    "sr": "145",
+    "k": "310533010552",
+    "jal": "GUNDUSAR",
+    "meter": "652021"
+  },
+  {
+    "sr": "146",
+    "k": "310533010553",
+    "jal": "GUNDUSAR",
+    "meter": "9204860"
+  },
+  {
+    "sr": "147",
+    "k": "310533010587",
+    "jal": "BHADVO KI DHANI GUNDUSAR",
+    "meter": "7842123"
+  },
+  {
+    "sr": "148",
+    "k": "310533010644",
+    "jal": "GUNDUSAR",
+    "meter": "20536517"
+  },
+  {
+    "sr": "149",
+    "k": "310533009612",
+    "jal": "MEGHWALO KA MOHLA MAINAR",
+    "meter": "654412"
+  },
+  {
+    "sr": "150",
+    "k": "310533009627",
+    "jal": "MIANSAR",
+    "meter": "664341"
+  },
+  {
+    "sr": "151",
+    "k": "310533009635",
+    "jal": "VILLAGE TW MAINSAR",
+    "meter": "9207174"
+  },
+  {
+    "sr": "152",
+    "k": "310533009639",
+    "jal": "JHINJLAI DHANI",
+    "meter": "20536779"
+  },
+  {
+    "sr": "153",
+    "k": "310533009673",
+    "jal": "MEGHWALO KI DHANI MAINSAR",
+    "meter": "9873220"
+  },
+  {
+    "sr": "154",
+    "k": "310533009697",
+    "jal": "BUDHACAMP TW 1 MAINSAR",
+    "meter": "471370"
+  },
+  {
+    "sr": "155",
+    "k": "310533009698",
+    "jal": "BUDHACAMP TW 2 MAINSAR",
+    "meter": "8347286"
+  },
+  {
+    "sr": "156",
+    "k": "310533009699",
+    "jal": "ALMADI NADI TW N 2 MAINSAR",
+    "meter": "9867750"
+  },
+  {
+    "sr": "157",
+    "k": "310533009700",
+    "jal": "nan",
+    "meter": "9204864"
+  },
+  {
+    "sr": "158",
+    "k": "310533009701",
+    "jal": "JOHARNADI NEW TW MAINSAR",
+    "meter": "3163472"
+  },
+  {
+    "sr": "159",
+    "k": "310533006127",
+    "jal": "BASI",
+    "meter": "9876610"
+  },
+  {
+    "sr": "160",
+    "k": "310533006128",
+    "jal": "BAGSUE",
+    "meter": "325380"
+  },
+  {
+    "sr": "161",
+    "k": "310533006171",
+    "jal": "TW KUNDTAL DHANI",
+    "meter": "9867244"
+  },
+  {
+    "sr": "162",
+    "k": "310533006173",
+    "jal": "BAGSEU",
+    "meter": "4327"
+  },
+  {
+    "sr": "164",
+    "k": "310533007674",
+    "jal": "MUNDER",
+    "meter": "9873219"
+  },
+  {
+    "sr": "165",
+    "k": "310533007689",
+    "jal": "BHAGWANPURA",
+    "meter": "593219"
+  },
+  {
+    "sr": "166",
+    "k": "310533007749",
+    "jal": "MUNDER",
+    "meter": "471366"
+  },
+  {
+    "sr": "167",
+    "k": "310533007751",
+    "jal": "VILL DHORUNADI TW MUNDER",
+    "meter": "470932"
+  },
+  {
+    "sr": "168",
+    "k": "310533006376",
+    "jal": "DUDAWAS",
+    "meter": "1314122"
+  },
+  {
+    "sr": "169",
+    "k": "310533007530",
+    "jal": "DUDAWAS",
+    "meter": "1314812"
+  },
+  {
+    "sr": "170",
+    "k": "310533007541",
+    "jal": "MISLAW NADI DUDAWAS",
+    "meter": "1314808"
+  },
+  {
+    "sr": "171",
+    "k": "310533010110",
+    "jal": "JAISALSAR",
+    "meter": "3940150"
+  },
+  {
+    "sr": "172",
+    "k": "310533010119",
+    "jal": "HAMOLI NADI JAISALSAR",
+    "meter": "19554741"
+  },
+  {
+    "sr": "173",
+    "k": "310533010120",
+    "jal": "JAISALSAR",
+    "meter": "9206919"
+  },
+  {
+    "sr": "174",
+    "k": "310533010178",
+    "jal": "SAHERANAN DHANI JAISALSAR",
+    "meter": "9211294"
+  },
+  {
+    "sr": "175",
+    "k": "310533010179",
+    "jal": "DURGAPUR JAISLASAR",
+    "meter": "2397056"
+  },
+  {
+    "sr": "176",
+    "k": "310533010194",
+    "jal": "DHARMAYAT JAISALSAR",
+    "meter": "470969"
+  },
+  {
+    "sr": "177",
+    "k": "310533010352",
+    "jal": "JAISALSAR",
+    "meter": "9119129"
+  },
+  {
+    "sr": "178",
+    "k": "310533006420",
+    "jal": "BHOM BILINIYASAR",
+    "meter": "1314544"
+  },
+  {
+    "sr": "179",
+    "k": "310533004676",
+    "jal": "SINIYALA TW 3",
+    "meter": "1314107"
+  },
+  {
+    "sr": "180",
+    "k": "310533007791",
+    "jal": "GAV POTLIYA NADI",
+    "meter": "472272"
+  },
+  {
+    "sr": "181",
+    "k": "310533010439",
+    "jal": "MEGHWALO KI DHANI JAISALSAR",
+    "meter": "470966"
+  },
+  {
+    "sr": "182",
+    "k": "310533010437",
+    "jal": "MEGHWALO KI DHANI DURGAPURA",
+    "meter": "3163444"
+  },
+  {
+    "sr": "183",
+    "k": "310533010438",
+    "jal": "DAKSHIN EAST DHANI BHAGWANPURA",
+    "meter": "9419149"
+  },
+  {
+    "sr": "184",
+    "k": "310533010436",
+    "jal": "BACCHAN SINGH DHANI JAILSAR",
+    "meter": "1315319"
+  },
+  {
+    "sr": "185",
+    "k": "310533006274",
+    "jal": "NAYKO KI DHANI BAGSEU",
+    "meter": "nan"
+  },
+  {
+    "sr": "186",
+    "k": "310533010121",
+    "jal": "CHACHANIYA JAILSAR",
+    "meter": "98623990"
+  },
+  {
+    "sr": "187",
+    "k": "310533009873",
+    "jal": "MEGHWALO KA MOHLA MAINAR",
+    "meter": "6059522"
+  },
+  {
+    "sr": "188",
+    "k": "310533008076",
+    "jal": "SADHASAR",
+    "meter": "591989"
+  },
+  {
+    "sr": "189",
+    "k": "310533008301",
+    "jal": "SADHASAR",
+    "meter": "5552965"
+  },
+  {
+    "sr": "190",
+    "k": "310533008511",
+    "jal": "MANSURI",
+    "meter": "7840880"
+  },
+  {
+    "sr": "191",
+    "k": "310533008532",
+    "jal": "1 MANSURI",
+    "meter": "591995"
+  },
+  {
+    "sr": "192",
+    "k": "310533008727",
+    "jal": "MANSURI",
+    "meter": "1314123"
+  },
+  {
+    "sr": "193",
+    "k": "310533009055",
+    "jal": "BIDASARIYA",
+    "meter": "472042"
+  },
+  {
+    "sr": "194",
+    "k": "310533009077",
+    "jal": "BIDASARIYA",
+    "meter": "3164110"
+  },
+  {
+    "sr": "195",
+    "k": "310533009223",
+    "jal": "BIDASARIYA",
+    "meter": "1314541"
+  },
+  {
+    "sr": "196",
+    "k": "310533009369",
+    "jal": "UTMAMESAR",
+    "meter": "9207172"
+  },
+  {
+    "sr": "197",
+    "k": "310533001169",
+    "jal": "LALAMDESAR CHOTA",
+    "meter": "5382189"
+  },
+  {
+    "sr": "198",
+    "k": "310533000607",
+    "jal": "LALAMDESAR BADA",
+    "meter": "9211297"
+  },
+  {
+    "sr": "199",
+    "k": "310533000608",
+    "jal": "LALAMDESAR BADA",
+    "meter": "591992"
+  },
+  {
+    "sr": "200",
+    "k": "310533001179",
+    "jal": "LALAMDESAR CHOTA",
+    "meter": "6688841"
+  },
+  {
+    "sr": "201",
+    "k": "310533001283",
+    "jal": "LALAMDESAR CHOTA",
+    "meter": "14246630"
+  },
+  {
+    "sr": "202",
+    "k": "310533000428",
+    "jal": "PH SADHASAR",
+    "meter": "9969250"
+  },
+  {
+    "sr": "203",
+    "k": "310533004917",
+    "jal": "MEHRAMSAR",
+    "meter": "6689683"
+  },
+  {
+    "sr": "204",
+    "k": "310533004386",
+    "jal": "UDSAR",
+    "meter": "9873237"
+  },
+  {
+    "sr": "205",
+    "k": "310533006579",
+    "jal": "LALASAR",
+    "meter": "nan"
+  },
+  {
+    "sr": "206",
+    "k": "310533006610",
+    "jal": "LALASAR",
+    "meter": "nan"
+  },
+  {
+    "sr": "207",
+    "k": "310533006669",
+    "jal": "LALASAR",
+    "meter": "nan"
+  },
+  {
+    "sr": "208",
+    "k": "310533007970",
+    "jal": "SADHASAR",
+    "meter": "9211202"
+  },
+  {
+    "sr": "209",
+    "k": "310533008657",
+    "jal": "MANSURI",
+    "meter": "32551"
+  },
+  {
+    "sr": "210",
+    "k": "310533004065",
+    "jal": "MEUSAR",
+    "meter": "9212698"
+  },
+  {
+    "sr": "211",
+    "k": "310533004066",
+    "jal": "MEUSAR",
+    "meter": "3940156"
+  },
+  {
+    "sr": "212",
+    "k": "310533003911",
+    "jal": "SAJANWASHI",
+    "meter": "3162654"
+  },
+  {
+    "sr": "215",
+    "k": "310523000848",
+    "jal": "BADNU",
+    "meter": "5004999"
+  },
+  {
+    "sr": "216",
+    "k": "310523009212",
+    "jal": "KUCHOR AATHUNI",
+    "meter": "9212633"
+  },
+  {
+    "sr": "217",
+    "k": "310523009211",
+    "jal": "KUCHOR AATHUNI",
+    "meter": "9114740"
+  },
+  {
+    "sr": "218",
+    "k": "310523014996",
+    "jal": "BADNU",
+    "meter": "9747917"
+  },
+  {
+    "sr": "219",
+    "k": "310523014625",
+    "jal": "BADNU",
+    "meter": "9212648"
+  },
+  {
+    "sr": "220",
+    "k": "310523014435",
+    "jal": "KUCHOR AGUNI",
+    "meter": "nan"
+  },
+  {
+    "sr": "221",
+    "k": "310523014424",
+    "jal": "KUCHOR AGUNI",
+    "meter": "5153539"
+  },
+  {
+    "sr": "222",
+    "k": "310523014423",
+    "jal": "KUCHOR AGUNI",
+    "meter": "6689210"
+  },
+  {
+    "sr": "223",
+    "k": "310523014132",
+    "jal": "KUCHOR AGUNI",
+    "meter": "596347"
+  },
+  {
+    "sr": "224",
+    "k": "310523013874",
+    "jal": "KUCHOR AGUNI",
+    "meter": "131544"
+  },
+  {
+    "sr": "225",
+    "k": "310523015541",
+    "jal": "BADNU",
+    "meter": "470761"
+  },
+  {
+    "sr": "226",
+    "k": "310523015885",
+    "jal": "JAISINGH DESAR KALIYA RAMSAR",
+    "meter": "3939109"
+  },
+  {
+    "sr": "227",
+    "k": "310531002287",
+    "jal": "A E N  R-I  PHED NOKHA RAMDEV KI DHANI SO",
+    "meter": "9207145"
+  },
+  {
+    "sr": "229",
+    "k": "310532000987",
+    "jal": "ANKHISAR MEGHWALO KA MOHLLA",
+    "meter": "1352357"
+  },
+  {
+    "sr": "230",
+    "k": "310532001299",
+    "jal": "DHUPAPIYA MANGILAL MEGHWAL KHET",
+    "meter": "3162898"
+  },
+  {
+    "sr": "231",
+    "k": "310532001300",
+    "jal": "SC ST BASTI JAWAHAR PURA",
+    "meter": "14319247"
+  },
+  {
+    "sr": "232",
+    "k": "310532001301",
+    "jal": "JAWAHAR PURA DHUPALIYA",
+    "meter": "1350932"
+  },
+  {
+    "sr": "233",
+    "k": "310532009381",
+    "jal": "JUNE KI DHANI NIMBDIYASAR",
+    "meter": "1352201"
+  },
+  {
+    "sr": "234",
+    "k": "310532009382",
+    "jal": "SCHOOL KE PASS NIMBADIASAR JOON KI PADAT",
+    "meter": "3162899"
+  },
+  {
+    "sr": "235",
+    "k": "310523014440",
+    "jal": "SHIVDHORA",
+    "meter": "2394515"
+  },
+  {
+    "sr": "236",
+    "k": "310532015199",
+    "jal": "KIRTASAR NEW TW",
+    "meter": "9215782"
+  },
+  {
+    "sr": "237",
+    "k": "310532014549",
+    "jal": "SC ST BASTI SINDU",
+    "meter": "3163424A"
+  },
+  {
+    "sr": "238",
+    "k": "310533006292",
+    "jal": "BAGSEU",
+    "meter": "19552157"
+  },
+  {
+    "sr": "239",
+    "k": "310533010747",
+    "jal": "UTRADI DHANI GUNDUAR",
+    "meter": "9212349"
+  },
+  {
+    "sr": "240",
+    "k": "310533010473",
+    "jal": "DURGAPUR JAISLASAR",
+    "meter": "9207173"
+  },
+  {
+    "sr": "241",
+    "k": "310533009993",
+    "jal": "GODARO KI DHANI MAINSAR",
+    "meter": "14248215"
+  },
+  {
+    "sr": "242",
+    "k": "310533009995",
+    "jal": "MAINSAR BHATIYA DHANI",
+    "meter": "3163478"
+  },
+  {
+    "sr": "243",
+    "k": "310531025857",
+    "jal": "A E N R-I PHED NOKHA MEGHWALO KI DHANI PURV SOMALSA",
+    "meter": "32100"
+  },
+  {
+    "sr": "244",
+    "k": "310531026654",
+    "jal": "A E N R-I PHED NOKHA  NAYAKO   MEGHWALO KI SOUTH DH",
+    "meter": "1314988"
+  },
+  {
+    "sr": "245",
+    "k": "310532008646",
+    "jal": "HANUMAN DHORA HIMTSAR",
+    "meter": "1350978"
+  },
+  {
+    "sr": "249",
+    "k": "310532008647",
+    "jal": "HIMTSAR",
+    "meter": "nan"
+  },
+  {
+    "sr": "252",
+    "k": "310533006752",
+    "jal": "LALASAR",
+    "meter": "9212353"
+  },
+  {
+    "sr": "253",
+    "k": "310532014184",
+    "jal": "GENANA TALAB SINJGURU",
+    "meter": "6688768"
+  },
+  {
+    "sr": "254",
+    "k": "310532008684",
+    "jal": "KHARJANIYA ROAD GAON",
+    "meter": "920700"
+  },
+  {
+    "sr": "255",
+    "k": "310523018055",
+    "jal": "KUCHOR AATHUNI",
+    "meter": "855804"
+  },
+  {
+    "sr": "256",
+    "k": "310531028380",
+    "jal": "ASSITMANT ENGEER (PHED)  SOMALSAR SOMALSAR",
+    "meter": "6684669"
+  },
+  {
+    "sr": "259",
+    "k": "310533010991",
+    "jal": "KUKNO KI DHANI JAISLAR",
+    "meter": "9211296"
+  },
+  {
+    "sr": "260",
+    "k": "310533011268",
+    "jal": "THAWARIYA",
+    "meter": "1315194V"
+  },
+  {
+    "sr": "261",
+    "k": "310533011009",
+    "jal": "JASRASAR SHIV MANDIR",
+    "meter": "6688632"
+  },
+  {
+    "sr": "262",
+    "k": "310533011265",
+    "jal": "GAJSUKHDESAR",
+    "meter": "2396719"
+  },
+  {
+    "sr": "263",
+    "k": "310533011259",
+    "jal": "JASRASAR",
+    "meter": "1314105"
+  },
+  {
+    "sr": "264",
+    "k": "310533011477",
+    "jal": "LALAMDESAR BADA",
+    "meter": "9204862"
+  },
+  {
+    "sr": "265",
+    "k": "310533011470",
+    "jal": "HEMOLAI NADI JAISALR",
+    "meter": "592288"
+  },
+  {
+    "sr": "266",
+    "k": "310533011887",
+    "jal": "SINIYALA",
+    "meter": "1315318"
+  },
+  {
+    "sr": "267",
+    "k": "310532016590",
+    "jal": "MEGHWALO KI DHANI MUKAM TALWA",
+    "meter": "LNT31703"
+  },
+  {
+    "sr": "268",
+    "k": "310531034419",
+    "jal": "SARPANCH GRAM PANCHAYAT O/O AEN PHED   MADHIYA ROAD  J",
+    "meter": "nan"
+  },
+  {
+    "sr": "269",
+    "k": "310531035577",
+    "jal": "A E N PHED  C O SITY S DIV NOKHA NOKHAMAN",
+    "meter": "1315621"
+  },
+  {
+    "sr": "270",
+    "k": "310533005695",
+    "jal": "THAWARIYA TW N 1 REC",
+    "meter": "1315189"
+  },
+  {
+    "sr": "271",
+    "k": "310532018976",
+    "jal": "MATAJI MANDIR KIRTASR SAMSHAN GHAT",
+    "meter": "20250528"
+  },
+  {
+    "sr": "272",
+    "k": "310532018974",
+    "jal": "SUTHARO KA BAS KAKRA",
+    "meter": "3767654"
+  },
+  {
+    "sr": "273",
+    "k": "310533014879",
+    "jal": "MEUSAR",
+    "meter": "8347281"
+  },
+  {
+    "sr": "274",
+    "k": "310533014878",
+    "jal": "KHIYADI NADI JASRAR",
+    "meter": "9206922"
+  },
+  {
+    "sr": "275",
+    "k": "310533014910",
+    "jal": "KARNANI NADI THAWARIYA RAOD BAGSEU",
+    "meter": "465409H"
+  },
+  {
+    "sr": "276",
+    "k": "310533014909",
+    "jal": "MEGHWALO KA MOHLA JHARELI",
+    "meter": "6057089"
+  },
+  {
+    "sr": "277",
+    "k": "310533015019",
+    "jal": "GRAM JHARELI JHARELI",
+    "meter": "6045251"
+  },
+  {
+    "sr": "278",
+    "k": "310533015020",
+    "jal": "SHIV MAINSAR",
+    "meter": "591506"
+  },
+  {
+    "sr": "279",
+    "k": "310531040904",
+    "jal": "ASSISTANT ENGINEER(PHED)  SOMALSAR SOMALSAR",
+    "meter": "1211380"
+  },
+  {
+    "sr": "280",
+    "k": "310531040905",
+    "jal": "PHED GHATOO  GHATOO GHATOO NOKHA",
+    "meter": "6689502"
+  },
+  {
+    "sr": "281",
+    "k": "310531040902",
+    "jal": "AEN    PHED GHATTU NOKHA 0",
+    "meter": "472002"
+  },
+  {
+    "sr": "282",
+    "k": "310531040903",
+    "jal": "ASST  ENGINEER    WATER WORKS GHATU 0",
+    "meter": "461716"
+  },
+  {
+    "sr": "283",
+    "k": "310531041565",
+    "jal": "SARPANCH O/O AEN PHED   ANKHISAR ROAD",
+    "meter": "1314326"
+  },
+  {
+    "sr": "284",
+    "k": "310532018629",
+    "jal": "ANKHISAR NEW 20",
+    "meter": "1315498"
+  },
+  {
+    "sr": "285",
+    "k": "310533014709",
+    "jal": "GAJSUKHDESAR NEW 20 IMMILAL DHANI",
+    "meter": "9212700"
+  },
+  {
+    "sr": "286",
+    "k": "310533014848",
+    "jal": "GAJSUKHDESAR NEW 20",
+    "meter": "9212390"
+  },
+  {
+    "sr": "287",
+    "k": "310533013731",
+    "jal": "NAYKO KA MOHLA UTMAMDESAR LALMDSAR CHOTA",
+    "meter": "9215799"
+  },
+  {
+    "sr": "288",
+    "k": "310532019355",
+    "jal": "NOKHA ROAD MAIYASAR",
+    "meter": "472150"
+  },
+  {
+    "sr": "289",
+    "k": "310533015576",
+    "jal": "GOUSALA PARISAR SADHASAR",
+    "meter": "625368"
+  },
+  {
+    "sr": "290",
+    "k": "310533015536",
+    "jal": "NAYKO KA MOHLA SADHSAR ROAD JASRASAR",
+    "meter": "9119224"
+  },
+  {
+    "sr": "291",
+    "k": "310533016094",
+    "jal": "NEAR GGUP SCHOOL GAJRSUKHDESAR",
+    "meter": "6688844"
+  },
+  {
+    "sr": "292",
+    "k": "310533016093",
+    "jal": "BISHNOI KI DHANI GAJSUKHDESAR",
+    "meter": "nan"
+  },
+  {
+    "sr": "293",
+    "k": "310533016132",
+    "jal": "MEGHWALO KI DHANI BAGSEU",
+    "meter": "7842088G"
+  },
+  {
+    "sr": "294",
+    "k": "310533016133",
+    "jal": "JASNATH NAGAR BAGSEU",
+    "meter": "7842160G"
+  },
+  {
+    "sr": "295",
+    "k": "310533016131",
+    "jal": "NAKHAT BANA DHAM BAGSEU",
+    "meter": "7414256G"
+  },
+  {
+    "sr": "296",
+    "k": "310533016209",
+    "jal": "NEAR PAPUGAR SWAMI KHET SINIYALA",
+    "meter": "7842087"
+  },
+  {
+    "sr": "297",
+    "k": "310533016218",
+    "jal": "GRAMIN BHOM BAGSEU",
+    "meter": "9204859A"
+  },
+  {
+    "sr": "298",
+    "k": "310533016313",
+    "jal": "SADHASAR NEAR PANCHAYAT BHAWAN",
+    "meter": "9211198"
+  },
+  {
+    "sr": "299",
+    "k": "310532020717",
+    "jal": "MALANI DHARMSALA MUKAM",
+    "meter": "13945195"
+  },
+  {
+    "sr": "300",
+    "k": "310532020588",
+    "jal": "NEAR SANSKRIT SCHOOL KHICHIYASAR MUKAM",
+    "meter": "1315702"
+  },
+  {
+    "sr": "301",
+    "k": "310532020945",
+    "jal": "KAKRA NEAR BY PASS",
+    "meter": "9212709"
+  },
+  {
+    "sr": "302",
+    "k": "310532021910",
+    "jal": "BISHNOIYO KE DHANI MUKAM",
+    "meter": "1352203A"
+  },
+  {
+    "sr": "303",
+    "k": "310532020944",
+    "jal": "BANIYA JUNE KI DHANI",
+    "meter": "1352716"
+  },
+  {
+    "sr": "304",
+    "k": "310532020947",
+    "jal": "JAISINGHDESAR KALIYA NEAR FANTA",
+    "meter": "1315741"
+  },
+  {
+    "sr": "307",
+    "k": "310532021499",
+    "jal": "BADH KAKRA NEAR SCHOOL K",
+    "meter": "9215475"
+  },
+  {
+    "sr": "305",
+    "k": "310533016494",
+    "jal": "SAJANVASHI ROAD JASRASAR",
+    "meter": "nan"
+  },
+  {
+    "sr": "306",
+    "k": "310533016550",
+    "jal": "UTMAMDESAR JHAKDO KA BAS",
+    "meter": "99999999"
+  },
+  {
+    "sr": "308",
+    "k": "310532019275",
+    "jal": "NEAR VISWAKARMA MANDIR KAKRA",
+    "meter": "1350933"
+  },
+  {
+    "sr": "309",
+    "k": "310532019276",
+    "jal": "NEAR SAHID BAJRANG LAL MURTI KAKRA",
+    "meter": "14316467"
+  },
+  {
+    "sr": "310",
+    "k": "310532019277",
+    "jal": "HANUMAN DHORA KAKRA",
+    "meter": "472154"
+  },
+  {
+    "sr": "328",
+    "k": "310532022673",
+    "jal": "KUKNIYA MEGHWALO KA MOHLLA",
+    "meter": "nan"
+  },
+  {
+    "sr": "311",
+    "k": "310531045115",
+    "jal": "SIROLO KI DHANI DASNU",
+    "meter": "6045052"
+  },
+  {
+    "sr": "312",
+    "k": "310531045423",
+    "jal": "SIROLO KI DHANI DASNU 1",
+    "meter": "6045052"
+  },
+  {
+    "sr": "313",
+    "k": "310531044710",
+    "jal": "NAYKO KI DHANI DASNU MARG RAISAR",
+    "meter": "6689506"
+  },
+  {
+    "sr": "314",
+    "k": "310531045425",
+    "jal": "KHILIYA NADI SALUNDIYA",
+    "meter": "59099414A"
+  },
+  {
+    "sr": "315",
+    "k": "310533016694",
+    "jal": "LALMDESAR BADA GOSALA KE SAMNE",
+    "meter": "9159326"
+  },
+  {
+    "sr": "316",
+    "k": "310533016825",
+    "jal": "NEAR CHOKHA RAM KI DHANI MAINSAR",
+    "meter": "3302003"
+  },
+  {
+    "sr": "317",
+    "k": "310533016864",
+    "jal": "LALASAR SATHRI 2022",
+    "meter": "nan"
+  },
+  {
+    "sr": "318",
+    "k": "310533016870",
+    "jal": "SWAMI MOHLA MASURI 2022",
+    "meter": "nan"
+  },
+  {
+    "sr": "319",
+    "k": "310533015316",
+    "jal": "NEAR KALKAJI MANDIR JOGNIYA BALA THAWARIYA",
+    "meter": "9174682"
+  },
+  {
+    "sr": "320",
+    "k": "310533017030",
+    "jal": "GANW THAWARIYA 1.23",
+    "meter": "5116800"
+  },
+  {
+    "sr": "321",
+    "k": "310533016998",
+    "jal": "MEUSAR 1.23",
+    "meter": "5116431"
+  },
+  {
+    "sr": "322",
+    "k": "310533016999",
+    "jal": "SHIV DHORA JASRASAR",
+    "meter": "5116433"
+  },
+  {
+    "sr": "323",
+    "k": "310531047248",
+    "jal": "BIRAMSAR NEW",
+    "meter": "6689505"
+  },
+  {
+    "sr": "324",
+    "k": "310533016791",
+    "jal": "RAJPUTO KA BASS THAWARIYA 2023",
+    "meter": "nan"
+  },
+  {
+    "sr": "325",
+    "k": "310523023215",
+    "jal": "MATAJI MANDIR KE PAS BADNU",
+    "meter": "9175190"
+  },
+  {
+    "sr": "326",
+    "k": "310523023216",
+    "jal": "SAMSAN BHUMI BADNU",
+    "meter": "9174553"
+  },
+  {
+    "sr": "332",
+    "k": "310532022897",
+    "jal": "MEGHWLAO KA MOHALA MORKHANA 6-24",
+    "meter": "1966963"
+  },
+  {
+    "sr": "330",
+    "k": "310533017560",
+    "jal": "SAMSAN BHOMI BIDASARIYA 19.3.24",
+    "meter": "5116956"
+  },
+  {
+    "sr": "331",
+    "k": "310533017561",
+    "jal": "MEGHWALO KA MOHLLA MASURI 19.3.24",
+    "meter": "5117629"
+  },
+  {
+    "sr": "333",
+    "k": "310532022898",
+    "jal": "MATAJI MANDIR SOWA 6-24",
+    "meter": "1315550"
+  },
+  {
+    "sr": "336",
+    "k": "310532022736",
+    "jal": "GORAKSHA NAGAR BERASAR 2024",
+    "meter": "9215726"
+  },
+  {
+    "sr": "334",
+    "k": "310533017771",
+    "jal": "JASWANT RAM KI DHANI CHAINASAR JESALSAR 2024",
+    "meter": "5241157"
+  },
+  {
+    "sr": "335",
+    "k": "310533017761",
+    "jal": "LALASAR BUS STEND 2024",
+    "meter": "5241156"
+  },
+  {
+    "sr": "302A",
+    "k": "310532020943",
+    "jal": "GAJSUKHDESAR SHIV NAGRI",
+    "meter": "1352355"
+  },
+  {
+    "sr": "337",
+    "k": "310531049518",
+    "jal": "MEGHWALO KI DHANI CHARAKADA ROAD RAISAR P",
+    "meter": "nan"
+  },
+  {
+    "sr": "338",
+    "k": "310531049813",
+    "jal": "LAHRANA NADA MADIYA",
+    "meter": "nan"
+  },
+  {
+    "sr": "339",
+    "k": "310531049517",
+    "jal": "MANGAL SINGH KI DHANI AISAR",
+    "meter": "nan"
+  },
+  {
+    "sr": "340",
+    "k": "310531040845",
+    "jal": "MEGHWALO KI DHANI RAMDEVRA ROAD",
+    "meter": "nan"
+  },
+  {
+    "sr": "341",
+    "k": "310531034419",
+    "jal": "BIRAMSAR HANUMAN MANDIR KE PAAS",
+    "meter": "nan"
+  },
+  {
+    "sr": "342",
+    "k": "310531051782",
+    "jal": "SOMALSAR",
+    "meter": "nan"
+  },
+  {
+    "sr": "343",
+    "k": "310531049519",
+    "jal": "DHAIYA DHANI RAISAR",
+    "meter": "nan"
+  },
+  {
+    "sr": "344",
+    "k": "310531049515",
+    "jal": "MEGHWALO KI DHANI KE PAS LADHUPURA",
+    "meter": "nan"
+  },
+  {
+    "sr": "345",
+    "k": "310531049516",
+    "jal": "GODARA KI DHANI KE PAS BIRAMSAR",
+    "meter": "nan"
+  },
+  {
+    "sr": "346",
+    "k": "310531051464",
+    "jal": "KHICHIYASAR ROAD DAHIYO KI DHANI",
+    "meter": "nan"
+  },
+  {
+    "sr": "347",
+    "k": "310531049513",
+    "jal": "KAMDIYA DHANI SEWADI ROAD RAISAR",
+    "meter": "nan"
+  },
+  {
+    "sr": "348",
+    "k": "310531049514",
+    "jal": "BIDAWATO KI DHANI KE PAS BIRAMSAR",
+    "meter": "nan"
+  },
+  {
+    "sr": "349",
+    "k": "310523023008",
+    "jal": "KUCHOR ATHUNI NEW NPS BKN",
+    "meter": "nan"
+  }
+];
+
+function loadMasterData() {
+    const masterTable = document.getElementById('masterTable').getElementsByTagName('tbody')[0];
+    const srDropdown = document.getElementById('sr_no');
+    masterTable.innerHTML = '';
+    srDropdown.innerHTML = '<option value="">चयन करें</option>';
+    embeddedMasterData.forEach(function(item) {
+      var row = masterTable.insertRow();
+      row.innerHTML = '<td>' + item.sr + '</td><td>' + item.k + '</td><td>' + item.jal + '</td><td>' + item.meter + '</td><td>-</td>';
+      var opt = document.createElement('option');
+      opt.value = item.sr;
+      opt.textContent = item.sr;
+      srDropdown.appendChild(opt);
+    });
+    srDropdown.addEventListener('change', function () {
+      const selected = embeddedMasterData.find(d => d.sr === this.value);
+      document.getElementById('k_number').value = selected ? selected.k : '';
+      document.getElementById('jal_yojana').value = selected ? selected.jal : '';
+      document.getElementById('meter_number').value = selected ? selected.meter : '';
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", loadMasterData);
+</script>
+
+</body>
+</html>
+<script>
+ function submitForm() {
+  const kNumber = document.getElementById('k_number').value.trim();
+  const month = document.getElementById('month').value.trim();
+  const year = document.getElementById('year').value.trim();
+
+  // Check against visible table rows
+  const rows = document.querySelectorAll('#dataTable tbody tr');
+  for (let row of rows) {
+    const cells = row.querySelectorAll('td');
+    const existingK = cells[2]?.textContent.trim();
+    const existingMonth = cells[5]?.textContent.trim();
+    const existingYear = cells[6]?.textContent.trim();
+    if (existingK === kNumber && existingMonth === month && existingYear === year) {
+      showToast('❌ इस K Number पर इस माह और वर्ष की एंट्री पहले से मौजूद है!');
+      return;
+    }
+  }
+
+  // Check against localStorage
+  const savedData = JSON.parse(localStorage.getItem('savedTableRows') || '[]');
+  for (let row of savedData) {
+    const existingK = row[1]?.trim();     // K No is column 1 in saved data
+    const existingMonth = row[4]?.trim(); // Month is column 4 in saved data
+    const existingYear = row[5]?.trim();  // Year is column 5 in saved data
+    if (existingK === kNumber && existingMonth === month && existingYear === year) {
+      showToast('❌ इस K Number पर इस माह और वर्ष की एंट्री पहले से LocalStorage में मौजूद है!');
+      return;
+    }
+  }
+
+  const ids = ['sr_no','k_number','jal_yojana','meter_number','month','year','current_reading','prev_reading',
+    'units_used','energy_charge','fixed_charge','power_factor','other_charges','nigam_rashi','duty','water_cess',
+    'other_due','other_extra','total_amount','previous_dues','remarks'];
+  const values = ids.map(id => document.getElementById(id).value);
+
+  const tr = document.createElement('tr');
+  const checkboxTd = document.createElement('td');
+  const cb = document.createElement('input');
+  cb.type = 'checkbox';
+  checkboxTd.appendChild(cb);
+  tr.appendChild(checkboxTd);
+
+  values.forEach(text => {
+    const td = document.createElement('td');
+    td.contentEditable = true;
+    td.textContent = text;
+    tr.appendChild(td);
+  });
+
+  const tbody = document.querySelector('#dataTable tbody');
+  tbody.appendChild(tr);
+
+  saveTableToLocal();
+  saveFormToLocal();
+
+  // Collect form data for cloud
+  const formData = {};
+  ids.forEach((id, idx) => { formData[id] = values[idx]; });
+  sendToCloud(formData);
+
+  const savedMonth = document.getElementById('month').value;
+  const savedYear = document.getElementById('year').value;
+  document.getElementById('billForm').reset();
+  document.getElementById('month').value = savedMonth;
+  document.getElementById('year').value = savedYear;
+}
+</script>
+<script>
+ function saveTableToLocal() {
+  const rows = document.querySelectorAll('#dataTable tbody tr');
+  const allData = [];
+  rows.forEach(row => {
+    const cells = row.querySelectorAll('td');
+    const rowData = [];
+    for (let i = 1; i < cells.length; i++) { // skip checkbox column (index 0)
+      rowData.push(cells[i].textContent.trim());
+    }
+    allData.push(rowData);
+  });
+  localStorage.setItem('savedTableRows', JSON.stringify(allData));
+}
+</script>
+<script>
+ function loadTableFromLocal() {
+  const saved = JSON.parse(localStorage.getItem('savedTableRows') || '[]');
+  const tbody = document.querySelector('#dataTable tbody');
+  tbody.innerHTML = '';
+  saved.forEach(rowData => {
+    const tr = document.createElement('tr');
+
+    // Add checkbox cell first
+    const checkboxTd = document.createElement('td');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    checkboxTd.appendChild(cb);
+    tr.appendChild(checkboxTd);
+
+    // Now add proper columns in order
+    rowData.forEach(text => {
+      const td = document.createElement('td');
+      td.contentEditable = true;
+      td.textContent = text;
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
+}
+</script>
+
+<script>
+
+function sendToCloud(data) {
+  fetch("https://script.google.com/macros/s/AKfycbySyoPRbL7r7xYITlo6NeWEDTOykhQe3jzbKWRUnBggd-aXzWIBdXGvErDOnvw-_JqPIw/exec", {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  }).then(() => {
+    showToast("☁️ डेटा Cloud (Google Sheets) में सेव हो गया!");
+  }).catch(err => {
+    showToast("❌ Cloud में सेव करने में समस्या: " + err);
+  });
+}
+
+</script>
+
+<script>
+
+function fetchMasterData() {
+  fetch("https://script.google.com/macros/s/AKfycbySyoPRbL7r7xYITlo6NeWEDTOykhQe3jzbKWRUnBggd-aXzWIBdXGvErDOnvw-_JqPIw/exec")
+    .then(r => r.json())
+    .then(rows => {
+      const masterTable = document.getElementById('masterTable').getElementsByTagName('tbody')[0];
+      const srDropdown = document.getElementById('sr_no');
+      masterTable.innerHTML = '';
+      srDropdown.innerHTML = '<option value="">चयन करें</option>';
+
+      rows.forEach((row,i) => {
+        const [sr,k,jal,meter] = row;
+        const tr = masterTable.insertRow();
+        tr.innerHTML = `<td>${sr}</td><td>${k}</td><td>${jal}</td><td>${meter}</td><td>-</td>`;
+
+        const opt = document.createElement('option');
+        opt.value = sr;
+        opt.textContent = sr;
+        srDropdown.appendChild(opt);
+      });
+    })
+    .catch(err => console.error("MasterData Load Error:", err));
+}
+
+document.addEventListener("DOMContentLoaded", fetchMasterData);
+
+// Override master form submit to save to cloud
+document.getElementById('masterForm').onsubmit = function(e) {
+  e.preventDefault();
+  const item = {
+    sr: document.getElementById('sr').value,
+    k: document.getElementById('k').value,
+    jal: document.getElementById('jal').value,
+    meter: document.getElementById('meter').value,
+    type: "master"
+  };
+  sendToCloud(item);
+  this.reset();
+  setTimeout(fetchMasterData, 1000);
+};
+
+</script>
